@@ -97,7 +97,7 @@ class: title
 
 Docker Saigon <br/> Orchestration <br/> Workshop
 
-???
+---
 
 ## Intros
 
@@ -246,7 +246,7 @@ grep '^# ' index.html | grep -v '<br' | tr '#' '-'
 # VM environment
 
 - Each person gets 3 private VMs (not shared with anybody else)
-- They'll be up until the end of the Workshop
+- They'll be up until the end of the workshop
 - You have a little card with login+password+IP addresses
 - You can automatically SSH from one VM to another
 
@@ -372,6 +372,17 @@ You are welcome to use the method that you feel the most comfortable with.
   - `worker` = background process using `rng` and `hasher`
   - `webui` = web interface to watch progress
 
+.exercise[
+
+- Overview:
+  ```bash
+  less ~/orchestration-workshop/dockercoins/docker-compose.yml
+  ```
+
+  press `q` to exit
+
+]
+
 ???
 
 ## Compose file format version
@@ -390,7 +401,7 @@ You are welcome to use the method that you feel the most comfortable with.
 
 ---
 
-## Links, naming, and service discovery
+## Compose: Links, naming, and service discovery
 
 - Containers can have network aliases (resolvable through DNS)
 
@@ -437,7 +448,7 @@ class: pic
   - `redis` is also updated every second to track speed
   - you can see the progress with the `webui`
 
----
+???
 
 ## Getting the application source code
 
@@ -455,7 +466,7 @@ class: pic
 
 - Clone the repository on `node1`:
   ```bash
-  git clone git://github.com/jpetazzo/orchestration-workshop
+  git clone git://github.com/so0k/orchestration-workshop
   ```
 
 ]
@@ -603,7 +614,7 @@ Tip: use `^S` and `^Q` to pause/resume log output.
 
   - between two consecutive updates, the counter will increase either by 4, or by 0
 
----
+???
 
 ## Scaling up the application
 
@@ -637,7 +648,7 @@ We have available resources.
 - Why?
 - How can we use them?
 
----
+???
 
 ## Scaling workers on a single node
 
@@ -659,7 +670,7 @@ We have available resources.
 
 ]
 
----
+???
 
 ## Adding more workers
 
@@ -687,7 +698,7 @@ killall docker-compose
 
 ]
 
----
+???
 
 # Identifying bottlenecks
 
@@ -708,7 +719,7 @@ killall docker-compose
 - Let's use state-of-the-art HTTP performance analysis!
   <br/>(i.e. good old tools like `ab`, `httping`...)
 
----
+???
 
 ## Measuring latency under load
 
@@ -730,7 +741,7 @@ We will use `httping`.
 
 `rng` has a much higher latency than `hasher`.
 
----
+???
 
 ## Let's draw hasty conclusions
 
@@ -747,7 +758,7 @@ Note: this is a fiction! We have enough entropy. But we need a pretext to scale 
 
 ## Clean up
 
-- Before moving on, let's remove those containers
+- Before scaling out across a cluster, let's remove those containers from the single node
 
 .exercise[
 
@@ -802,7 +813,7 @@ class: title
 
 - And much more!
 
----
+???
 
 ## Where is the key/value store?
 
@@ -880,7 +891,7 @@ You can refer to the [NOMENCLATURE](https://github.com/docker/swarmkit/blob/mast
 
 - The SwarmKit API is also exposed (on a separate socket)
 
-???
+---
 
 ## Illustration
 
@@ -925,10 +936,10 @@ You can refer to the [NOMENCLATURE](https://github.com/docker/swarmkit/blob/mast
   ```
 
 ]
-
+<!--
 If Docker tells you that it `could not choose an IP address to advertise`, see next slide!
-
----
+-->
+???
 
 ## IP address to advertise
 
@@ -948,7 +959,7 @@ If Docker tells you that it `could not choose an IP address to advertise`, see n
 - You can also specify a port number
   <br/>(otherwise, the default port 2377 will be used)
 
----
+???
 
 ## Which IP address should be advertised?
 
@@ -1182,11 +1193,11 @@ ehb0...4fvx    node2     Ready   Active
 
 ]
 
-You should see your 5 nodes.
+You should see your 3 nodes.
 
----
+???
 
-## How did we make our 5 nodes show up there?
+## How did we make our 3 nodes show up there?
 
 *For the curious...*
 
@@ -1294,7 +1305,7 @@ All communication is encrypted over TLS.
 The node keys and certificates are automatically renewed on regular intervals
 <br/>(by default, 90 days; this is tunable with `docker swarm update`).
 
----
+???
 
 ## Adding more manager nodes
 
@@ -1317,7 +1328,7 @@ The node keys and certificates are automatically renewed on regular intervals
 
 ]
 
----
+???
 
 ## You can control the Swarm from any manager node
 
@@ -1344,7 +1355,9 @@ As we saw earlier, you can only control the Swarm through a manager node.
 
 ## Promoting nodes
 
+<!--
 - Instead of adding a manager node, we can also promote existing workers
+-->
 
 - Nodes can be promoted (and demoted) at any time
 
@@ -1357,7 +1370,7 @@ As we saw earlier, you can only control the Swarm through a manager node.
 
 - Promote the two worker nodes to be managers:
   ```
-  docker node promote XXX YYY
+  docker node promote node2 node3
   ```
 
 ]
@@ -1374,17 +1387,17 @@ As we saw earlier, you can only control the Swarm through a manager node.
 
 - Create a service featuring an Alpine container pinging Google resolvers:
   ```bash
-  docker service create alpine ping 8.8.8.8
+  docker service create --name ping-service alpine ping 8.8.8.8
   ```
 
 - Check where the container was created:
   ```bash
-  docker service ps <serviceID>
+  docker service ps ping-service
   ```
 
 ]
 
----
+???
 
 ## Checking container logs
 
@@ -1403,7 +1416,7 @@ As we saw earlier, you can only control the Swarm through a manager node.
 
 ]
 
----
+???
 
 ## Viewing the logs of the container
 
@@ -1434,12 +1447,18 @@ Go back to `node1` afterwards.
 
 .exercise[
 
-- Scale the service to ensure 2 copies per node:
+- Scale the service to ensure 3 copies per node:
   ```bash
-  docker service update <serviceID> --replicas 10
+  docker service update ping-service --replicas 9
   ```
 
-- Check that we have two containers on the current node:
+- Review service lifecycle
+
+  ```bash
+  watch docker service ps ping-service
+  ```
+
+- Check that we have three containers on the current node:
   ```bash
   docker ps
   ```
@@ -1467,7 +1486,7 @@ Go back to `node1` afterwards.
 - You can indicate two port numbers to set the public port number
   <br/>(just like with `docker run -p`)
 
----
+???
 
 ## Expose ElasticSearch on its default port
 
@@ -1504,7 +1523,7 @@ Go back to `node1` afterwards.
 
 ![diagram showing what happens during docker service create, courtesy of @aluzzardi](docker-service-create.svg)
 
----
+???
 
 ## Test our service
 
@@ -1583,7 +1602,7 @@ In this part, we will cover:
 - Once our images are on a registry, we can reference them when
   creating our services
 
----
+???
 
 ## Build, ship, and run, for a single service
 
@@ -1731,9 +1750,14 @@ If we wanted to use DTR, we would:
   curl localhost:5000/v2/_catalog
   ```
 
+  or in a loop:
+  ```bash
+  while true;do curl localhost:5000/v2/_catalog; sleep 1; done
+  ```
+
 ]
 
-(Retry a few times, it might take 10-20 seconds for the container to be started. Patience.)
+(It might take 10-20 seconds for the container to be started. Patience.)
 
 ---
 
@@ -1776,7 +1800,7 @@ The curl command should now output:
 {"repositories":["busybox"]}
 ```
 
----
+???
 
 ## Build, tag, and push our application container images
 
@@ -1798,6 +1822,53 @@ The curl command should now output:
   ```
 
 ]
+
+---
+
+## Build, tag, and push our application container images
+
+- Compose (and clever environment variables) can help us push all images easier
+
+- When using Compose file version 2, you can specify *both* `build` and `image`:
+
+.exercise[
+
+- Use Compose file with images defined
+  ```bash
+  # notice only image tags were added
+  diff docker-compose.yml docker-compose.yml-images
+  mv docker-compose.yml docker-compose.yml-orig
+  mv docker-compose.yml-images docker-compose.yml
+  ```
+- Set `REGISTRY_SLASH` and `COLON_TAG` environment variables to use our local registry
+
+- Build and Tag images using `docker-compose`:
+  ```bash
+    export REGISTRY_SLASH=localhost:5000/
+    export COLON_TAG=:v0.1
+    docker-compose build
+    docker-compose push
+  ```
+]
+
+---
+
+## Why the weird variable names?
+
+- It would be more intuitive to have:
+  ```bash
+  REGISTRY=localhost:5000
+  TAG=v0.01
+  ```
+
+- But then, when the variables are not set, the image names would be invalid
+
+  (they would look like .red[`/rng:`])
+
+- Putting the slash and the colon in the variables allows to use the Compose file
+  even when the variables are not set
+
+- The variable names (might) remind you that you have to put the trailing slash and heading colon
 
 ---
 
@@ -1839,7 +1910,7 @@ Can you see how?
 
 - They are using the overlay driver.
 
----
+???
 
 ## Caveats
 
@@ -1885,11 +1956,9 @@ Moreover, it would significantly alter the code path for `docker run`, even in c
 
 - Start the other services:
   ```bash
-  DOCKER_REGISTRY=localhost:5000
-  TAG=v0.1
   for SERVICE in hasher rng webui worker; do
     docker service create --network dockercoins --name $SERVICE \
-           $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+           $REGISTRY_SLASH$SERVICE$COLON_TAG
   done
   ```
 
@@ -2019,7 +2088,7 @@ You should see the performance peaking at 10 hashes/s (like before).
 - Re-create the `rng` service with *global scheduling*:
   ```bash
     docker service create --name rng --network dockercoins --mode global \
-      $DOCKER_REGISTRY/dockercoins_rng:$TAG
+      ${REGISTRY_SLASH}rng${COLON_TAG}
   ```
 
 - Look at the result in the web UI
@@ -2048,13 +2117,13 @@ Let's treat ourselves with a nice pat on the back!
 
 And carry on, we have much more to see and learn!
 
----
+???
 
 class: title
 
 #  Operating the Swarm
 
----
+???
 
 ## Troubleshooting overlay networks
 
@@ -2072,7 +2141,7 @@ class: title
 
   (Better techniques and tools might become available in the future!)
 
----
+???
 
 # Breaking into an overlay network
 
@@ -2096,7 +2165,7 @@ With global scheduling, I'm *guaranteed* to have an instance on the local node.
 <br/>
 I don't need to SSH to another node.
 
----
+???
 
 ## Entering the debug container
 
@@ -2116,7 +2185,7 @@ I don't need to SSH to another node.
 
 ]
 
----
+???
 
 ## Labels
 
@@ -2138,7 +2207,7 @@ I don't need to SSH to another node.
 
 ]
 
----
+???
 
 ## Installing our debugging tools
 
@@ -2155,7 +2224,7 @@ I don't need to SSH to another node.
 
 ]
 
----
+???
 
 ## Investigating the `rng` service
 
@@ -2173,7 +2242,7 @@ I don't need to SSH to another node.
 This give us one IP address. It is not the IP address of a container.
 It is a virtual IP address (VIP) for the `rng` service.
 
----
+???
 
 ## Investigating the VIP
 
@@ -2191,7 +2260,7 @@ It *should* ping. (But this might change in the future.)
 Current behavior for VIPs is to ping when there is a backend available on the same machine.
 (Again: this might change in the future.)
 
----
+???
 
 ## What if I don't like VIPs?
 
@@ -2209,7 +2278,7 @@ Current behavior for VIPs is to ping when there is a backend available on the sa
 
 - You change this with `docker service create --endpoint-mode [VIP|DNSRR]`
 
----
+???
 
 ## Looking up VIP backends
 
@@ -2226,7 +2295,7 @@ Current behavior for VIPs is to ping when there is a backend available on the sa
 
 ]
 
-This should list 5 IP addresses.
+This should list 3 IP addresses.
 
 ???
 
@@ -2454,7 +2523,7 @@ WHY?!?
 
 - Build the new image:
   ```bash
-  IMAGE=localhost:5000/dockercoins_worker:v0.01
+  IMAGE=localhost:5000/worker:v0.2
   docker build -t $IMAGE worker
   ```
 
@@ -2547,7 +2616,7 @@ By default, SwarmKit does a rolling upgrade, one instance at a time.
 
 - Then it waits for the `update-delay`, and continues with the next batch of instances
 
----
+???
 
 ## Getting cluster-wide task information
 
@@ -2564,7 +2633,7 @@ By default, SwarmKit does a rolling upgrade, one instance at a time.
 
 - First, we need to install `swarmctl`
 
----
+???
 
 ## Building `swarmctl`
 
@@ -2586,7 +2655,7 @@ Remove `-v` if you don't like verbose things.
 Shameless promo: for more Go and Docker love, check
 [this blog post](http://jpetazzo.github.io/2016/09/09/go-docker/)!
 
----
+???
 
 ## Using `swarmctl`
 
@@ -2604,7 +2673,7 @@ Shameless promo: for more Go and Docker love, check
 
 ]
 
----
+???
 
 ## `swarmctl` in action
 
@@ -2624,7 +2693,7 @@ Shameless promo: for more Go and Docker love, check
 
 ]
 
----
+???
 
 ## Caveat
 
@@ -2639,7 +2708,7 @@ Shameless promo: for more Go and Docker love, check
 Error: grpc: failed to unmarshal the received message proto: wrong wireType = 0
 ```
 
----
+???
 
 # Centralized logging
 
@@ -2655,7 +2724,7 @@ Error: grpc: failed to unmarshal the received message proto: wrong wireType = 0
 
 - We will update our services to send logs through the GELF logging driver
 
----
+???
 
 # Setting up ELK to store container logs
 
@@ -2674,7 +2743,7 @@ What we will do:
 
 - Set our containers up to send their logs to Logstash
 
----
+???
 
 ## What's in an ELK stack?
 
@@ -2695,7 +2764,7 @@ What we will do:
 - Log entries will be stored in ElasticSearch,
   <br/>and displayed on Logstash's stdout for debugging
 
----
+???
 
 ## Setting up ELK
 
@@ -2717,7 +2786,7 @@ What we will do:
 
 ]
 
----
+???
 
 ## Setting up Kibana
 
@@ -2740,7 +2809,7 @@ What we will do:
 
 ]
 
----
+???
 
 ## Setting up Logstash
 
@@ -2760,7 +2829,7 @@ What we will do:
 
 ]
 
----
+???
 
 ## Checking Logstash
 
@@ -2780,7 +2849,7 @@ What we will do:
 
 ]
 
----
+???
 
 ## View Logstash logs
 
@@ -2809,7 +2878,7 @@ You should see the heartbeat messages:
 ```
 ]
 
----
+???
 
 ## Testing the GELF receiver
 
@@ -2851,7 +2920,7 @@ The test message should show up in the logstash container logs.
 
 The test message should show up as well in the logstash container logs.
 
----
+???
 
 ## Connect to Kibana
 
@@ -2861,7 +2930,7 @@ The test message should show up as well in the logstash container logs.
 
   (Remember: you can use any instance address!)
 
----
+???
 
 ## "Configuring" Kibana
 
@@ -2882,7 +2951,7 @@ The test message should show up as well in the logstash container logs.
 
 - You should see a series of green bars (with one new green bar every minute)
 
----
+???
 
 ## Updating our services to use GELF
 
@@ -2906,7 +2975,7 @@ The test message should show up as well in the logstash container logs.
 
 After ~15 seconds, you should see the log messages in Kibana.
 
----
+???
 
 ## Viewing container logs
 
@@ -2933,7 +3002,7 @@ After ~15 seconds, you should see the log messages in Kibana.
 
 ]
 
----
+???
 
 ## .warning[Don't update stateful services!]
 
@@ -2947,7 +3016,7 @@ After ~15 seconds, you should see the log messages in Kibana.
 
 - If we updated our Redis service, all our DockerCoins would be lost
 
----
+???
 
 ## Important afterword
 
@@ -2967,7 +3036,7 @@ that you don't drop messages on the floor. Good luck.
 
 ---
 
-# Metrics collection
+# Metrics collection (Bonus Points)
 
 - We want to gather metrics in a central place
 
@@ -3011,7 +3080,7 @@ For details about container metrics, see:
 <br/>
 http://jpetazzo.github.io/2013/10/08/docker-containers-metrics/
 
----
+???
 
 ## Tools
 
@@ -3029,7 +3098,7 @@ We will use three open source Go projects for our metrics pipeline:
 
   Displays metrics visually
 
----
+???
 
 ## Snap
 
@@ -3047,7 +3116,7 @@ We will use three open source Go projects for our metrics pipeline:
 
 - Docs: https://github.com/intelsdi-x/snap/blob/master/docs/
 
----
+???
 
 ## InfluxDB
 
@@ -3063,7 +3132,7 @@ We will use three open source Go projects for our metrics pipeline:
 
 - Snap has a plugin allowing to *publish* to InfluxDB
 
----
+???
 
 ## Grafana
 
@@ -3075,7 +3144,7 @@ We will use three open source Go projects for our metrics pipeline:
 
 - Grafana can read data from InfluxDB and display it as graphs
 
----
+???
 
 ## Getting and setting up Snap
 
@@ -3092,7 +3161,7 @@ We will use three open source Go projects for our metrics pipeline:
 
 - This service will effectively install Snap on the hosts
 
----
+???
 
 ## The Snap installer service
 
@@ -3117,7 +3186,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
 
 ]
 
----
+???
 
 ## First contact with `snapd`
 
@@ -3139,7 +3208,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
   https://github.com/intelsdi-x/snap/blob/master/docs/SNAPD.md
   https://github.com/intelsdi-x/snap/blob/master/docs/SNAPD_CONFIGURATION.md
 
----
+???
 
 ## Using `snapctl` to interact with `snapd`
 
@@ -3161,7 +3230,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
 
 ]
 
----
+???
 
 ## Checking what we've done
 
@@ -3181,7 +3250,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
 
 ]
 
----
+???
 
 ## Actually collecting metrics: introducing *tasks*
 
@@ -3202,7 +3271,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
 - More resources:
   https://github.com/intelsdi-x/snap/blob/master/docs/TASKS.md
 
----
+???
 
 ## Our first task manifest
 
@@ -3224,7 +3293,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
                 file: "/tmp/snap-psutil-file.log" # write to this file
 ```
 
----
+???
 
 ## Creating our first task
 
@@ -3250,7 +3319,7 @@ for BIN in snapd snapctl; do ln -s /opt/snap/bin/$BIN /usr/local/bin/$BIN; done
     State: Running
   ```
 
----
+???
 
 ## Checking existing tasks
 
@@ -3269,7 +3338,7 @@ The output should look like the following:
     ID           NAME              STATE     HIT MISS FAIL CREATED
     24043...acba Task-24043...acba Running   4   0    0    2:34PM   8-13-2016
   ```
----
+???
 
 ## Viewing our task dollars at work
 
@@ -3288,7 +3357,7 @@ The output should look like the following:
 
 To exit, hit `^C`
 
----
+???
 
 ## Debugging tasks
 
@@ -3322,7 +3391,7 @@ To exit, hit `^C`
 
 ]
 
----
+???
 
 ## Stopping snap
 
@@ -3344,7 +3413,7 @@ To exit, hit `^C`
 
 - All tasks will be stopped; all plugins will be unloaded; Snap will exit
 
----
+???
 
 ## Snap Tribe Mode
 
@@ -3363,7 +3432,7 @@ To exit, hit `^C`
 - More resources:
   https://github.com/intelsdi-x/snap/blob/master/docs/TRIBE.md
 
----
+???
 
 ## Running Snap itself on every node
 
@@ -3378,7 +3447,7 @@ To exit, hit `^C`
 
 - Once logged on the node, the service starts snapd with Tribe Mode enabled
 
----
+???
 
 ## Running Snap itself on every node
 
@@ -3399,7 +3468,7 @@ To exit, hit `^C`
 
 ]
 
----
+???
 
 ## Viewing the members of our tribe
 
@@ -3416,7 +3485,7 @@ To exit, hit `^C`
 
 This should show the 5 nodes with their hostnames.
 
----
+???
 
 ## Create an agreement
 
@@ -3438,7 +3507,7 @@ The output should look like the following:
   docker-influxdb  0                       0            0
 ```
 
----
+???
 
 ## Instruct all nodes to join the agreement
 
@@ -3462,7 +3531,7 @@ The last bit of output should look like the following:
   docker-influxdb  5                       0               0
 ```
 
----
+???
 
 ## Start a container on every node
 
@@ -3481,7 +3550,7 @@ The last bit of output should look like the following:
 
 ]
 
----
+???
 
 ## Running InfluxDB
 
@@ -3501,7 +3570,7 @@ The last bit of output should look like the following:
 
 - We will just publish the first two
 
----
+???
 
 ## Creating the InfluxDB service
 
@@ -3525,7 +3594,7 @@ on port 8083.
 (like, the name of the default retention policy is now "autogen") and
 this breaks a few things.]
 
----
+???
 
 ## Setting up InfluxDB
 
@@ -3565,7 +3634,7 @@ Note: the InfluxDB query language *looks like* SQL but it's not.
 
 ]
 
----
+???
 
 ## Load Docker collector and InfluxDB publisher
 
@@ -3590,7 +3659,7 @@ Note: the InfluxDB query language *looks like* SQL but it's not.
 
 ]
 
----
+???
 
 ## Start a simple collection task
 
@@ -3613,7 +3682,7 @@ located at 127.0.0.1:8086. Since the InfluxDB container is published
 on port 8086, 127.0.0.1:8086 always routes traffic to the InfluxDB
 container.
 
----
+???
 
 ## If things go wrong...
 
@@ -3631,7 +3700,7 @@ snapctl task start <ID>
 This must be done *per node*. Alternatively, you can delete+re-create
 the task (it will delete+re-create on all nodes).
 
----
+???
 
 ## Check that metric data shows up in InfluxDB
 
@@ -3653,7 +3722,7 @@ the task (it will delete+re-create on all nodes).
 
 ]
 
----
+???
 
 ## Deploy Grafana
 
@@ -3670,7 +3739,7 @@ the task (it will delete+re-create on all nodes).
 
 ]
 
----
+???
 
 ## Set up Grafana
 
@@ -3688,7 +3757,7 @@ the task (it will delete+re-create on all nodes).
 
 ]
 
----
+???
 
 ## Add InfluxDB as a data source for Grafana
 
@@ -3713,11 +3782,11 @@ If you see an orange box (sometimes without a message), it means that you got so
 
 ]
 
----
+???
 
 ![Screenshot showing how to fill the form](grafana-add-source.png)
 
----
+???
 
 ## Create a dashboard in Grafana
 
@@ -3739,7 +3808,7 @@ If you see an orange box (sometimes without a message), it means that you got so
 
 At this point, you should see a sample graph showing up.
 
----
+???
 
 ## Setting up a graph in Grafana
 
@@ -3760,17 +3829,17 @@ At this point, you should see a sample graph showing up.
 
 Congratulations, you are viewing the CPU usage of a single container!
 
----
+???
 
 ![Screenshot showing the end result](grafana-add-graph.png)
 
----
+???
 
 ## Prometheus
 
-- Prometheus is another metrics collection system
+- Prometheus is a metrics collection system
 
-- Snap *pushes* metrics; Prometheus *pulls* them
+- Statsd *pushes* metrics; Prometheus *pulls* them
 
 - The *Prometheus server* pulls, stores, and displays metrics
 
@@ -3781,7 +3850,7 @@ Congratulations, you are viewing the CPU usage of a single container!
 
   (An optimized format using protobuf is also possible)
 
----
+???
 
 ## It's all about the `/metrics`
 
@@ -3989,7 +4058,7 @@ Their state should be "UP".
     sum without (cpu) (
       irate(
         container_cpu_usage_seconds_total{
-          container_label_com_docker_swarm_task_name="influxdb.1",
+          container_label_com_docker_swarm_task_name="worker.1",
           id=~"/docker/.*"
           }[1m]
       )
@@ -3999,6 +4068,104 @@ Their state should be "UP".
 - Click on the blue "Execute" button and on the "Graph" tab just below
 
 ]
+
+---
+
+## Deploy Grafana
+
+- We will use an almost-official image, `grafana/grafana`
+
+- We will publish Grafana's web interface on its default port (3000)
+
+.exercise[
+
+- Create the Grafana service:
+  ```bash
+  docker service create --name grafana --publish 3000:3000 grafana/grafana:3.1.1
+  ```
+
+]
+
+---
+
+## Set up Grafana
+
+.exercise[
+
+- Go to http://any.node.address:3000/
+
+- Identify with "admin" as the username and password
+
+- Click on the Grafana logo (the orange spiral in the top left corner)
+
+- Click on "Data Sources"
+
+- Click on "Add data source" (green button on the right)
+
+]
+
+---
+
+## Add Prometheus as a data source for Grafana
+
+.small[
+
+Fill the form exactly as follows:
+- Name = "Prometheus"
+- Tick the "default" checkbox
+- Type = "Prometheus"
+
+In HTTP settings, fill as follows:
+- Url = "http://any.node.address:9090"
+- Access = "direct"
+- Leave HTTP Auth untouched
+
+Finally, click on "add", you should see a green message saying "Success - Data source is working".
+If you see an orange box (sometimes without a message), it means that you got something wrong. Triple check everything again.
+
+]
+
+---
+
+![Screenshot showing how to fill the form](grafana-add-prom-source.png)
+
+???
+
+## Create a dashboard in Grafana
+
+.exercise[
+
+- Click on the Grafana logo again (the orange spiral in the top left corner)
+
+- Hover over "Dashboards"
+
+- Click "+ New"
+
+- Click on the little green rectangle that appeared in the top left
+
+- Hover over "Add Panel"
+
+- Click on "Graph"
+
+]
+
+At this point, you should see a sample graph showing up.
+
+---
+
+## Import sample Dashboard in Grafana
+
+.exercise[
+
+- Download sample dashboard from [Grafana Samples](https://grafana.net/dashboards/395)
+- Dashboards > Import > main-overview-rev1.json
+- Click on Prometheus as data source, click OK
+
+]
+
+---
+
+![Screenshot showing the end result](grafana-add-prom-dashboard.png)
 
 ---
 
@@ -4236,6 +4403,7 @@ even when it is not strictly technically necessary.
 
 - Update the service with a volume mount:
   ```bash
+    docker volume create --name foobarstore
     docker service update stateful \
            --mount-add type=volume,source=foobarstore,target=/data
   ```
@@ -4243,6 +4411,7 @@ even when it is not strictly technically necessary.
 - Check the new volume list:
   ```bash
   docker volume ls
+  docker volume inspect foobarstore
   ```
 
 ]
@@ -4311,7 +4480,7 @@ persist data. Beware!]
 
 Note: we could keep the volume around if we wanted.
 
----
+???
 
 # Scripting image building and pushing
 
@@ -4334,7 +4503,7 @@ services:
 Note: Compose tolerates empty (or unset) environment variables, but in this example,
 `TAG` *must* be set, because `jpetazzo/webapp:` is not a valid image name.
 
----
+???
 
 ## Updating the Compose file to specify image tags
 
@@ -4358,7 +4527,7 @@ Note: Compose tolerates empty (or unset) environment variables, but in this exam
 
 You can also directly use the file `docker-compose.yml-images`.
 
----
+???
 
 ## Use the new Compose file
 
@@ -4382,7 +4551,7 @@ You can also directly use the file `docker-compose.yml-images`.
 
 ]
 
----
+???
 
 ## Why the weird variable names?
 
@@ -4497,7 +4666,7 @@ Oh, right, we need the *experimental* build of Docker!
 
 - Deploy our app using the DAB file:
   ```bash
-    ~/docker/docker stack deploy dockercoins
+    ~/docker/docker stack deploy --bundle-file dockercoins.dab dockercoins
   ```
 
 - Check the stack deployment:
@@ -4542,7 +4711,7 @@ We only need it for `docker stack`.
 
 ]
 
----
+???
 
 ## Scoping
 
@@ -4568,7 +4737,7 @@ We only need it for `docker stack`.
 
 You can specify *most* of them in the DAB itself, but Compose can't generate it (yet).
 
----
+???
 
 # Controlling Docker from a container
 
@@ -4590,7 +4759,7 @@ More resources on this topic:
 - [One container to rule them all](
   http://jpetazzo.github.io/2016/04/03/one-container-to-rule-them-all/)
 
----
+???
 
 ## Bind-mounting the Docker control socket
 
@@ -4605,7 +4774,7 @@ More resources on this topic:
 
 ---
 
-# Node management
+# Node management (Bonus points)
 
 - SwarmKit allows to change (almost?) everything on-the-fly
 
@@ -4680,13 +4849,9 @@ class: title
 
 # Thanks! <br/> Questions?
 
-<!--
-## [@jpetazzo](https://twitter.com/jpetazzo) <br/> [@docker](https://twitter.com/docker)
--->
 
-<!--
-## AJ ([@s0ulshake](https://twitter.com/s0ulshake)) <br/> Jérôme ([@jpetazzo](https://twitter.com/jpetazzo)) <br/> Tiffany ([@tiffanyfayj](https://twitter.com/tiffanyfayj))
--->
+## [@vincentdesmet](https://twitter.com/vincentdesmet) <br/> [@docker](https://twitter.com/docker)
+
 
     </textarea>
     <script src="remark-0.13.min.js" type="text/javascript">
