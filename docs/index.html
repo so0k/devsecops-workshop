@@ -178,9 +178,7 @@ grep '^# ' index.html | grep -v '<br' | tr '#' '-'
 ## Chapter 3: operating the Swarm
 
 - Rolling updates
-<!--
-- Centralized logging
--->
+<!-- - Centralized logging -->
 - Metrics collection
 
 ---
@@ -190,9 +188,7 @@ grep '^# ' index.html | grep -v '<br' | tr '#' '-'
 - Dealing with stateful services
 - Scripting image building and pushing
 - Distributed Application Bundles
-<!--
-- Controlling Docker from a container
--->
+<!-- - Controlling Docker from a container -->
 - Node management
 
 ---
@@ -1750,11 +1746,6 @@ If we wanted to use DTR, we would:
   ```
 
 - Try the following command, until it returns `{"repositories":[]}`:
-  <!--```bash
-  curl localhost:5000/v2/_catalog
-  ```
-
-  or in a loop:-->
   ```bash
   while true;do curl localhost:5000/v2/_catalog; sleep 1; done
   ```
@@ -1832,18 +1823,14 @@ The curl command should now output:
 ## Build, tag, and push our application container images
 
 - Compose (and clever environment variables) can help us push all images easier
-
+- Set `REGISTRY_SLASH` and `COLON_TAG` environment variables to use our local registry
 - When using Compose file version 2, you can specify *both* `build` and `image`:
 
 .exercise[
-
 - Use Compose file with images defined
   ```bash
-  mv docker-compose.yml docker-compose.yml-orig
   mv docker-compose.yml-images docker-compose.yml
   ```
-- Set `REGISTRY_SLASH` and `COLON_TAG` environment variables to use our local registry
-
 - Build and Tag images using `docker-compose`:
   ```bash
     export REGISTRY_SLASH=localhost:5000/
@@ -1860,7 +1847,7 @@ The curl command should now output:
 - It would be more intuitive to have:
   ```bash
   REGISTRY=localhost:5000
-  TAG=v0.01
+  TAG=v0.1
   ```
 
 - But then, when the variables are not set, the image names would be invalid
@@ -2718,7 +2705,7 @@ Error: grpc: failed to unmarshal the received message proto: wrong wireType = 0
 
 - If that place could offer a nice web dashboard too, that'd be nice
 
---
+??
 
 - We are going to deploy an ELK stack
 
@@ -3405,11 +3392,11 @@ To exit, hit `^C`
 
   - the configuration is purely local
 
---
+??
 
 - We want to change that!
 
---
+??
 
 - But first, go back to the terminal where `snapd` is running, and hit `^C`
 
