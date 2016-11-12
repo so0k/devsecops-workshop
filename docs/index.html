@@ -101,9 +101,7 @@ Docker Saigon <br/> Orchestration <br/> Workshop
 
 ## Intros
 
-- Hello! I am:
-
-  Vincent ([@vincentdesmet](https://twitter.com/vincentdesmet))
+- Hello! My name is Vincent ([@vincentdesmet](https://twitter.com/vincentdesmet))
 
 <!--
 Reminder, when updating the agenda: when people are told to show
@@ -180,7 +178,9 @@ grep '^# ' index.html | grep -v '<br' | tr '#' '-'
 ## Chapter 3: operating the Swarm
 
 - Rolling updates
+<!--
 - Centralized logging
+-->
 - Metrics collection
 
 ---
@@ -190,7 +190,9 @@ grep '^# ' index.html | grep -v '<br' | tr '#' '-'
 - Dealing with stateful services
 - Scripting image building and pushing
 - Distributed Application Bundles
+<!--
 - Controlling Docker from a container
+-->
 - Node management
 
 ---
@@ -359,6 +361,8 @@ You are welcome to use the method that you feel the most comfortable with.
 - The application is in the [dockercoins](
   https://github.com/so0k/orchestration-workshop/tree/master/dockercoins)
   subdirectory
+
+---
 
 - Let's look at the general layout of the source code:
 
@@ -708,11 +712,11 @@ killall docker-compose
 
 - *Something else* is slowing us down
 
---
+??
 
 - ... But what?
 
---
+??
 
 - The code doesn't have instrumentation
 
@@ -891,7 +895,7 @@ You can refer to the [NOMENCLATURE](https://github.com/docker/swarmkit/blob/mast
 
 - The SwarmKit API is also exposed (on a separate socket)
 
----
+???
 
 ## Illustration
 
@@ -1746,11 +1750,11 @@ If we wanted to use DTR, we would:
   ```
 
 - Try the following command, until it returns `{"repositories":[]}`:
-  ```bash
+  <!--```bash
   curl localhost:5000/v2/_catalog
   ```
 
-  or in a loop:
+  or in a loop:-->
   ```bash
   while true;do curl localhost:5000/v2/_catalog; sleep 1; done
   ```
@@ -1835,8 +1839,6 @@ The curl command should now output:
 
 - Use Compose file with images defined
   ```bash
-  # notice only image tags were added
-  diff docker-compose.yml docker-compose.yml-images
   mv docker-compose.yml docker-compose.yml-orig
   mv docker-compose.yml-images docker-compose.yml
   ```
