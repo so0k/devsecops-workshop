@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 *~
+.secret
 prepare-vms/ips.txt
 prepare-vms/ips.html
 prepare-vms/ips.pdf
