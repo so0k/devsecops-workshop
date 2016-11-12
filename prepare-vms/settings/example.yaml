@@ -2,8 +2,8 @@
 
 workshop_name: Docker Orchestration
 workshop_short_name: orchestration
-repo: https://github.com/jpetazzo/orchestration-workshop
-url: http://container.training/ # moreinfo link printed on cards
+repo: https://github.com/so0k/orchestration-workshop
+url: https://so0k.github.io/orchestration-workshop/ # moreinfo link printed on cards
 
 #engine_version: experimental.docker.com #extra features that may change/runaway
 #engine_version: test.docker.com
@@ -17,10 +17,10 @@ instance_login: docker
 instance_password: training
 
 # 12 per page works well, but is quite small text
-clustersize: 5  # Number of VMs per cluster
+clustersize: 3  # Number of VMs per cluster
 pagesize: 12    # Number of cards to print per page
 
-background_image: https://raw.githubusercontent.com/jpetazzo/orchestration-workshop/master/prepare-vms/media/swarm.png
+background_image: https://raw.githubusercontent.com/so0k/orchestration-workshop/master/prepare-vms/media/swarm.png
 
 # To be printed on the cards:
 blurb: >
