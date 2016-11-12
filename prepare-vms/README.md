@@ -34,12 +34,15 @@ The Docker Compose file here is used to build a image with all the dependencies 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_DEFAULT_REGION`
+- `AWS_INSTANCE_TYPE`
 
 ### Update/copy `settings/example.yaml`
 
 Then pass `settings/YOUR_WORKSHOP_NAME-settings.yaml` as an argument to `trainer deploy`, `trainer cards`, etc.
 
 ./trainer cards 2016-09-28-00-33-bret settings/orchestration.yaml
+
+Note: `pip install pdfkit`
 
 ## `./trainer` Usage
 

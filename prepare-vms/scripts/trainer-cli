@@ -119,7 +119,7 @@ tag_is_reachable() {
     TAG=$1
     need_tag $TAG
     link_tag $TAG
-    pssh -t 5 true 2>&1 >/dev/null
+    pssh -t 5 -h ips.txt -l ubuntu -x "-o StrictHostKeyChecking=no" true 2>&1 >/dev/null
 }
 
 test_tag(){
@@ -222,7 +222,11 @@ get_ami() {
     us-west-2)
       AMI=ami-43d40e23
       ;;
+    ap-southeast-1)
+      AMI=ami-a1288ec2
+      ;;
     esac
+    #for t2, need to use ebs (instance store not allowed for t2)
     echo $AMI
 }
 
@@ -396,7 +400,7 @@ run_cli() {
         result=$(aws ec2 run-instances \
             --key-name $AWS_KEY_NAME \
             --count $2 \
-            --instance-type c3.large \
+            --instance-type $AWS_INSTANCE_TYPE \
             --client-token $TOKEN \
             --image-id $AMI)
         reservation_id=$(echo "$result" | head -1 | awk '{print $2}' )
