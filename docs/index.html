@@ -3911,6 +3911,20 @@ Congratulations, you are viewing the CPU usage of a single container!
    ```
 
 ]
+---
+
+## Bind mounts?
+
+- Previous slide specified the `mount type=bind`, this is valid for system
+  paths from the host.
+  ```bash
+    docker service create --name ... --mode global --network prom \
+     --mount type=bind,source=/proc,target=/host/proc \
+     ...
+  ```
+
+- If not specified, the default `mount type=volume`, Volumes are storage that 
+  remains even after a container for a task has been removed. 
 
 ---
 
