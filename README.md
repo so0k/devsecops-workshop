@@ -23,7 +23,7 @@ a sample application.
 The easiest way to follow the workshop is to attend it when it is delivered
 by an instructor. In that case, the instructor will generally give you
 credentials (IP addresses, login, password) to connect to your own cluster
-of virtual machines; and the [slides](http://jpetazzo.github.io/orchestration-workshop)
+of virtual machines; and the [slides](http://so0k.github.io/devsecops-workshop)
 assume that you have your own cluster indeed.
 
 If you want to follow the workshop on your own, and want to have your
@@ -118,7 +118,7 @@ export $(cat .secret | xargs)
 - The slides are in the `docs` directory.
 - To view them locally open `docs/index.html` in your browser. It works
   offline too.
-- To view them online open https://so0k.github.io/orchestration-workshop/
+- To view them online open https://so0k.github.io/devsecops-workshop/
   in your browser.
 - When you fork this repo, be sure GitHub Pages is enabled in repo Settings
   for "master branch /docs folder" and you'll have your own website for them.
@@ -235,27 +235,6 @@ content but you also know to skip during presentation.
 - Next 60-75 minutes is getting dockercoins in Swarm Mode services across
   servers. Big Win.
 - Last 15-30 minutes is for stateful services, DAB files, and questions.
-
-
-## Past events
-
-Since its inception, this workshop has been delivered dozens of times,
-to thousands of people, and has continuously evolved. This is a short
-history of the first times it was delivered. Look also in the "tags"
-of this repository: they all correspond to successive iterations of
-this workshop. If you attended a past version of the workshop, you
-can use these tags to see what has changed since then.
-
-- QCON, New York City (2015, June)
-- KCDC, Kansas City (2015, June)
-- JDEV, Bordeaux (2015, July)
-- OSCON, Portland (2015, July)
-- StrangeLoop, Saint Louis (2015, September)
-- LISA, Washington D.C. (2015, November)
-- SCALE, Pasadena (2016, January)
-- Zenika, Paris (2016, February)
-- Container Solutions, Amsterdam (2016, February)
-- ... and much more!
 
 
 # Problems? Bugs? Questions?

@@ -6,10 +6,10 @@ repo: https://github.com/so0k/orchestration-workshop
 url: https://so0k.github.io/orchestration-workshop/ # moreinfo link printed on cards
 
 #engine_version: experimental.docker.com #extra features that may change/runaway
-#engine_version: test.docker.com
-engine_version: get.docker.com #prod release
-compose_version: 1.8.1
-machine_version: 0.8.2
+engine_version: test.docker.com #1.13 release candidate
+#engine_version: get.docker.com #prod release
+compose_version: 1.9.0
+machine_version: 0.9.0-rc1
 swarm_version: 1.2.5
 
 # for now these are hard coded in script, and only used for printing cards
@@ -17,10 +17,10 @@ instance_login: docker
 instance_password: training
 
 # 12 per page works well, but is quite small text
-clustersize: 3  # Number of VMs per cluster
-pagesize: 12    # Number of cards to print per page
+clustersize: 2  # Number of VMs per cluster
+pagesize: 1    # Number of cards to print per page
 
-background_image: https://raw.githubusercontent.com/so0k/orchestration-workshop/master/prepare-vms/media/swarm.png
+background_image: https://raw.githubusercontent.com/so0k/devsecops-workshop/master/prepare-vms/media/swarm.png
 
 # To be printed on the cards:
 blurb: >

@@ -78,7 +78,7 @@ Beta:
 - The `./trainer` script can be executed directly.
 - It will run locally if all its dependencies are fulfilled; otherwise it will run in the Docker container you created with `docker-compose build` (preparevms_prepare-vms).
 - During `start` it will add your default local SSH key to all instances under the `ubuntu` user.
-- During `deploy` it will create the `docker` user with password `training`, which is printing on the cards for students. For now, this is hard coded.
+- During `deploy` it will create the `docker` user with password `training`, which is printed on the cards for students.
 
 ### Example Steps to Launch a Batch of Instances for a Workshop
 
