@@ -455,12 +455,50 @@ You are welcome to use the method that you feel the most comfortable with.
   ```
 ]
 
-open http://<YOUR_IPADDRESS> to see your site live!
-
+open `http://<YOUR_IPADDRESS>` to see your site live!
 
 ---
 
-# Our sample application
+## Building your own Image
+
+Review sample Flask app
+
+.exercise[
+
+- Review code at `app.py`
+  ```bash
+  less ~/devsecops-workshop/flask-app/app.py
+  ```
+  press q to exit
+
+- Review `Dockerfile`
+  ```bash
+  less ~/devsecops-workshop/flask-app/Dockerfile
+  ```
+]
+---
+
+## Building your own Image
+
+To share your app, create an account on [Docker Hub](https://hub.docker.com).
+
+.exercise[
+
+- Build Image for Hub
+  ```bash
+  cd ~/devsecops-workshop/flask-app/
+  docker build -t <YOUR_USERNAME>/myfirstapp .
+  ```
+  make sure to replace <YOUR_USERNAME> with your username.
+
+- Run your app
+  ```bash
+  docker run -p 8888:5000 --name myfirstapp YOUR_USERNAME/myfirstapp
+  ```
+]
+---
+
+# An advanced multi-container app
 
 - Visit the GitHub repository with all the materials of this workshop:
   <br/>https://github.com/so0k/devsecops-workshop
